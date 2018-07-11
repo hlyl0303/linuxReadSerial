@@ -87,6 +87,12 @@
 		<Unit filename="/home/hlyl/02_test/linuxReadSerial/src/main.cpp">
 			<Option target="linuxReadSerial"/>
 		</Unit>
+		<Unit filename="/home/hlyl/02_test/linuxReadSerial/src/port.cpp">
+			<Option target="linuxReadSerial"/>
+		</Unit>
+		<Unit filename="/home/hlyl/02_test/linuxReadSerial/src/port.h">
+			<Option target="linuxReadSerial"/>
+		</Unit>
 		<Unit filename="/home/hlyl/02_test/linuxReadSerial/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
