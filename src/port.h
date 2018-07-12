@@ -18,6 +18,7 @@ public:
     uint8_t  t_dataBits = 8;
     uint8_t  t_stopBits = 1;
     uint8_t t_party = 'N';
+    char *devPath = "/dev/ttyUSB0";
 
     ttyUSB0(uint16_t speed, uint8_t data_bits, uint8_t stop_bits, uint8_t parity);
     ttyUSB0();

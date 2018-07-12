@@ -1,4 +1,5 @@
 #include <iostream>
+#include <termio.h>
 #include "port.h"
 
 
@@ -18,12 +19,10 @@ int main() {
         nread = port.readData(buffer, 512);
 
         if(nread > 0){
-            printf("lenth is %d\n", nread);
+//            printf("lenth is %d\n", nread);
             buffer[nread+1] = '\0';
-            printf("%s\n", buffer);
+            printf("%s", buffer);
         }
-
-
     }
 
 

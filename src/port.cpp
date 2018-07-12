@@ -30,7 +30,7 @@ ttyUSB0::~ttyUSB0(){
 
 int16_t ttyUSB0::openPort() {
     int fd;
-    fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY | O_NONBLOCK);
+    fd = open(devPath, O_RDWR | O_NOCTTY | O_NONBLOCK);
 
     if(-1 == fd){
         printf("can't open serial port\n");
@@ -83,7 +83,7 @@ uint8_t ttyUSB0::setParty(int16_t fd, uint16_t data_bits, uint16_t stop_bits, ui
         return(FALSE);
     }
     options.c_cflag &= ~CSIZE;
-    switch (data_bits) /*设置数据位数*/
+    switch (data_bits)
     {
         case 7:
             options.c_cflag |= CS7;
@@ -92,7 +92,8 @@ uint8_t ttyUSB0::setParty(int16_t fd, uint16_t data_bits, uint16_t stop_bits, ui
             options.c_cflag |= CS8;
             break;
         default:
-            fprintf(stderr,"Unsupported data size\n"); return (FALSE);
+            fprintf(stderr,"Unsupported data size\n");
+            return (FALSE);
     }
     switch (parity)
     {
@@ -103,13 +104,13 @@ uint8_t ttyUSB0::setParty(int16_t fd, uint16_t data_bits, uint16_t stop_bits, ui
             break;
         case 'o':
         case 'O':
-            options.c_cflag |= (PARODD | PARENB); /* 设置为奇效验*/
+            options.c_cflag |= (PARODD | PARENB);
             options.c_iflag |= INPCK;             /* Disnable parity checking */
             break;
         case 'e':
         case 'E':
             options.c_cflag |= PARENB;     /* Enable parity */
-            options.c_cflag &= ~PARODD;   /* 转换为偶效验*/
+            options.c_cflag &= ~PARODD;
             options.c_iflag |= INPCK;       /* Disnable parity checking */
             break;
         case 'S':
@@ -120,7 +121,7 @@ uint8_t ttyUSB0::setParty(int16_t fd, uint16_t data_bits, uint16_t stop_bits, ui
             fprintf(stderr,"Unsupported parity\n");
             return (FALSE);
     }
-/* 设置停止位*/
+
     switch (stop_bits)
     {
         case 1:
@@ -133,12 +134,15 @@ uint8_t ttyUSB0::setParty(int16_t fd, uint16_t data_bits, uint16_t stop_bits, ui
             fprintf(stderr,"Unsupported stop bits\n");
             return (FALSE);
     }
-/* Set input parity option */
+
     if (parity != 'n')
         options.c_iflag |= INPCK;
     tcflush(fd,TCIFLUSH);
-    options.c_cc[VTIME] = 150; /* 设置超时15 seconds*/
-    options.c_cc[VMIN] = 0; /* Update the options and do it NOW */
+    options.c_cc[VTIME] = 150;
+    options.c_cc[VMIN] = 0;
+    options.c_lflag  &= ~(ICANON | ECHO | ECHOE | ISIG);  /*Input*/
+
+    options.c_oflag  &= ~OPOST;   /*Output*/
     if (tcsetattr(fd,TCSANOW,&options) != 0)
     {
         perror("SetupSerial 3");
